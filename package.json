@@ -1,0 +1,66 @@
+{
+  "name": "reading-room",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build && node scripts/check-build-privacy.mjs",
+    "start": "next start --hostname 127.0.0.1",
+    "lint": "eslint .",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "tsx --test tests/domain.test.ts tests/repository.test.ts tests/wikipedia.test.ts tests/tutor.test.ts tests/companion.test.ts tests/learning.test.ts tests/anki.test.ts tests/review.test.ts tests/stabilization.test.ts tests/deployment.test.ts",
+    "test:e2e:learning": "playwright test --config playwright.learning.config.ts",
+    "test:archived:tutor:live": "tsx --test tests/tutor.live.test.ts",
+    "test:e2e:tutor": "playwright test --config playwright.tutor.config.ts",
+    "test:e2e": "playwright test --config playwright.companion.config.ts",
+    "test:e2e:companion": "playwright test --config playwright.companion.config.ts",
+    "test:e2e:legacy": "playwright test",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "test:wiki:live": "tsx --test tests/wikipedia.live.test.ts",
+    "test:e2e:wiki": "playwright test --config playwright.wikipedia.config.ts",
+    "test:e2e:anki": "playwright test --config playwright.anki.config.ts",
+    "test:e2e:review": "playwright test --config playwright.review.config.ts",
+    "test:e2e:v1": "playwright test --config playwright.v1.config.ts",
+    "db:backup": "tsx scripts/backup.ts",
+    "test:e2e:deployment": "playwright test --config playwright.deployment.config.ts",
+    "auth:secret": "tsx scripts/auth-secret.ts",
+    "db:migrate:test": "tsx scripts/migrate.ts --test"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.18.0",
+    "better-sqlite3": "^13.0.3",
+    "cheerio": "^1.2.0",
+    "drizzle-orm": "^0.45.3",
+    "lucide-react": "^1.48.0",
+    "next": "^16.3.6",
+    "openai": "^7.23.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/node": "^26.6.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.6",
+    "prettier": "^3.9.9",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3"
+  },
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "^0.25.0"
+    }
+  }
+}

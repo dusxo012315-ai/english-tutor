@@ -1,0 +1,16 @@
+.env*
+!.env.example
+data
+artifacts
+test-results
+playwright-report
+*.db
+*.db-wal
+*.db-shm
+*.log
+.git
+.next
+.next-local
+.next-e2e
+node_modules
+.vercel
