@@ -3,7 +3,7 @@ import { scryptSync } from "node:crypto";
 const salt = "0123456789abcdef0123456789abcdef";
 export default defineConfig({
   testDir: "./tests/e2e",
-  testMatch: "deployment.spec.ts",
+  testMatch: ["deployment.spec.ts", "session-deletion.spec.ts"],
   workers: 1,
   timeout: 120000,
   expect: { timeout: 20000 },

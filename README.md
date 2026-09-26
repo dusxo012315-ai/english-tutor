@@ -231,6 +231,23 @@ local 모드는 서버의 별도 SQLite 파일에, libsql 모드는 설정한 TE
 
 ## 자동화 테스트
 
+### History에서 학습 기록 삭제
+
+각 Reading/Listening 기록의 **Delete**를 누르고 제목과 안내를 확인한 뒤 **삭제 확인**을 누릅니다. 취소하면 기록은 그대로 유지됩니다. 삭제는 되돌릴 수 없습니다.
+
+- 세션, Reading 질문/선택/답안, Listening 라운드, Companion 기록·배운 내용, 세션에 저장한 표현과 메모를 함께 삭제합니다.
+- Anki 후보·Ready·Exported·Archived 카드는 **보존**하고 삭제한 세션과의 연결만 해제합니다. 출처 제목·URL·저작자 표시는 유지합니다.
+- 이전 카드의 필수 질문 연결은 제거하되, 카드 내용은 공통 Anki 카드로 보존합니다. 이전 카드와 공통 카드가 서로 다르게 편집되었다면 두 버전을 보존합니다.
+- 해당 세션만 가리키는 Review 기록은 정리합니다. 다른 세션/카드와 공유하는 표현·듣기 어려움의 복습 이력은 유지하며 추천은 남은 데이터로 다시 계산합니다. 보존된 미완성 Anki 후보는 계속 Review에 나올 수 있습니다.
+- 원문 스냅샷, 내보내기 당시의 카드/TSV 이력, 덱 설정과 다른 세션은 보존합니다.
+- 기존 `/api/state` 인증·revision 검사를 거쳐 한 트랜잭션에서 처리합니다. 실패하면 전부 롤백합니다. DB schema 변경이나 migration은 없습니다.
+
+다른 기기는 다음 상태 갱신 때 반영됩니다. 입력 중이라 갱신이 보류되거나 충돌 안내가 나오면 입력을 보관하고 새로고침하세요. 삭제한 세션을 다시 저장해 되살리지는 않습니다.
+
+`npm test`는 독립 임시 SQLite/libSQL DB에서 삭제·보존·외래키·롤백을 검증합니다. `npm run test:e2e:deployment`는 별도 로컬 DB에서 로그인 보호, 취소/확인, 다른 탭 갱신, Home/Review/Anki와 revision 충돌을 확인합니다. 기존 사용자 DB에는 테스트 삭제를 실행하지 않습니다.
+
+### 실행 명령
+
 ```powershell
 npm test                 # 네트워크 없는 도메인·DB·Wikipedia 계약/오류 테스트
 npm run test:e2e:learning # 통합 Reading/Listening/History/Anki, 외부 사이트 Mock

@@ -24,6 +24,7 @@ import type { AsyncTutor } from "@/server/adapters/openai";
 import { LearningRepository, isLearningAction } from "./learning-repository";
 import { newLearningSession, finishLearningSession } from "@/domain/learning";
 import { isReviewAction, recordReview } from "./review-repository";
+import { deleteLearningSession } from "./session-deletion";
 import {
   AnkiRepository,
   isAnkiAction,
@@ -374,6 +375,10 @@ export class SqliteRepository implements Repository {
     } & AnkiResult
   > {
     await this.ready;
+    if (action.type === "deleteLearningSession") {
+      await deleteLearningSession(this.db, action);
+      return { state: await this.getState() };
+    }
     if (isReviewAction(action)) {
       const id = await recordReview(this.db, action, await this.getState());
       return { state: await this.getState(), id };

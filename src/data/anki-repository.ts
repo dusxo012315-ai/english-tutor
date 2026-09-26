@@ -29,7 +29,7 @@ export type AnkiResult = {
 };
 export class AnkiRepository {
   constructor(private db: AsyncDatabase) {}
-  async backfill() {
+  async backfill(cardIds?: string[], preserveLegacyVariants = false) {
     await this.db.transaction(async (tx) => {
       const candidates = new Map(
         (await tx.select().from(schema.ankiCandidates).all()).map((r) => [
@@ -55,9 +55,25 @@ export class AnkiRepository {
         .onConflictDoNothing()
         .run();
       for (const row of await tx.select().from(schema.cards).all()) {
+        if (cardIds && !cardIds.includes(row.id)) continue;
         const c = row.payload;
-        const id = `legacy:${c.id}`;
-        const existing = await candidates.get(id);
+        let id = `legacy:${c.id}`;
+        let existing = candidates.get(id);
+        // Deleting a session must preserve both independently edited versions.
+        // Normal backfill still leaves user-edited common cards alone.
+        if (
+          preserveLegacyVariants &&
+          existing &&
+          !existing.legacyManaged &&
+          (existing.frontOverride !== c.front ||
+            existing.backOverride !== c.back ||
+            existing.expression !== c.expression ||
+            existing.meaning !== c.meaning ||
+            existing.attribution !== c.attribution)
+        ) {
+          id = `preserved:${c.id}`;
+          existing = candidates.get(id);
+        }
         if (
           existing &&
           (!existing.legacyManaged ||

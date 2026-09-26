@@ -15,6 +15,13 @@ export const actionSchema = z.discriminatedUnion("type", [
   ...reviewActions,
   z
     .object({
+      type: z.literal("deleteLearningSession"),
+      sessionId: id,
+      sessionType: z.enum(["READING", "LISTENING"]),
+    })
+    .strict(),
+  z
+    .object({
       type: z.literal("startListening"),
       sourceUrl: z
         .string()

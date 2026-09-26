@@ -17,6 +17,7 @@ import { filterLearningSessions, type LearningType } from "@/domain/learning";
 import { ListeningReflection } from "@/features/listening/listening-session";
 import { InteractionHistory } from "@/features/tutor/interaction-reflection";
 import { SessionCandidates } from "@/features/anki/session-candidates";
+import { DeleteSessionButton } from "./delete-session-button";
 export function HistoryPage() {
   const { state, run } = useStore();
   const router = useRouter();
@@ -24,6 +25,7 @@ export function HistoryPage() {
   const [modeFilter, setModeFilter] = useState<"ALL" | LearningType>("ALL");
   const [search, setSearch] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [notice, setNotice] = useState("");
   if (!state) return null;
   const commonSessions = filterLearningSessions(
     state.learningSessions,
@@ -70,6 +72,7 @@ export function HistoryPage() {
   }
   return (
     <div className="page">
+      {notice && <p role="status">{notice}</p>}
       <div className="page-heading">
         <div>
           <div className="eyebrow">YOUR LEARNING JOURNEY</div>
@@ -159,6 +162,16 @@ export function HistoryPage() {
               </div>
               <div className="history-card listening-history">
                 <h2>{s.userProvidedTitle}</h2>
+                <DeleteSessionButton
+                  sessionId={s.id}
+                  sessionType="LISTENING"
+                  title={s.userProvidedTitle}
+                  onDeleted={() =>
+                    setNotice(
+                      "학습 기록을 삭제했어요. Anki 카드와 내보내기 이력은 보존했습니다.",
+                    )
+                  }
+                />
                 <SessionCandidates sessionId={s.id} />
                 <p>
                   {s.completedAt ? "학습 마침" : "학습 중"} · {s.sourceType}
@@ -218,6 +231,16 @@ export function HistoryPage() {
             </div>
             <div className="history-card">
               <SessionCandidates sessionId={s.id} />
+              <DeleteSessionButton
+                sessionId={s.id}
+                sessionType="READING"
+                title={article.title}
+                onDeleted={() =>
+                  setNotice(
+                    "학습 기록을 삭제했어요. Anki 카드와 내보내기 이력은 보존했습니다.",
+                  )
+                }
+              />
               <div className="history-card-header">
                 <div className="article-icon">
                   <BookOpen size={22} />

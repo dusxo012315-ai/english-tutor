@@ -14,3 +14,4 @@ playwright-report
 .next-e2e
 node_modules
 .vercel
+*.zip
