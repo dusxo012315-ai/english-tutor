@@ -19,6 +19,7 @@ import type { Article } from "@/domain/types";
 import { DashboardStats } from "@/features/learning/dashboard-stats";
 import { ReviewHome } from "@/features/review/review-hub";
 import { ContinueLearning } from "@/features/learning/continue-learning";
+import { NextToStudy } from "@/features/plan/plan-links";
 export function HomePage() {
   const { state, run, busy } = useStore();
   const router = useRouter();
@@ -88,6 +89,7 @@ export function HomePage() {
         </span>
       </div>
       <ContinueLearning />
+      <NextToStudy />
       <form
         className="article-search"
         onSubmit={(e) => {

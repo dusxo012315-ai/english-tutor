@@ -1,4 +1,5 @@
 import { SqliteRepository } from "../src/data/repository";
+import { planArticle } from "../tests/fixtures/plan-article";
 async function main() {
   if (
     process.env.DATABASE_PURPOSE !== "test" ||
@@ -6,6 +7,8 @@ async function main() {
   )
     throw new Error("Isolated E2E database required");
   const mode = process.env.DB_MODE === "libsql" ? "libsql" : "local";
+  if (mode === "libsql" && !process.env.TURSO_DATABASE_URL?.startsWith("file:"))
+    throw new Error("E2E setup only supports isolated file databases");
   const r = new SqliteRepository(
     process.env.DATABASE_PATH,
     undefined,
@@ -18,6 +21,7 @@ async function main() {
     true,
   );
   await r.ready;
+  if (process.env.PLAN_E2E_FIXTURE === "true") await r.saveArticle(planArticle);
   await r.close();
 }
 main().catch(() => {

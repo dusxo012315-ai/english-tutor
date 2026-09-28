@@ -18,6 +18,7 @@ import { ListeningReflection } from "@/features/listening/listening-session";
 import { InteractionHistory } from "@/features/tutor/interaction-reflection";
 import { SessionCandidates } from "@/features/anki/session-candidates";
 import { DeleteSessionButton } from "./delete-session-button";
+import { SessionPlanLink } from "@/features/plan/plan-links";
 export function HistoryPage() {
   const { state, run } = useStore();
   const router = useRouter();
@@ -162,6 +163,7 @@ export function HistoryPage() {
               </div>
               <div className="history-card listening-history">
                 <h2>{s.userProvidedTitle}</h2>
+                <SessionPlanLink sessionId={s.id} />
                 <DeleteSessionButton
                   sessionId={s.id}
                   sessionType="LISTENING"
@@ -230,6 +232,7 @@ export function HistoryPage() {
               </span>
             </div>
             <div className="history-card">
+              <SessionPlanLink sessionId={s.id} />
               <SessionCandidates sessionId={s.id} />
               <DeleteSessionButton
                 sessionId={s.id}

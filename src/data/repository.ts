@@ -1,4 +1,5 @@
 import { UserFacingError } from "@/domain/errors";
+import { executePlan, isPlanAction } from "./plan-repository";
 import {
   connectDatabase,
   type AsyncDatabase,
@@ -279,7 +280,9 @@ export class SqliteRepository implements Repository {
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
       ...(await new LearningRepository(this.db).read()),
       mode: "mock",
-      schemaVersion: 4,
+      schemaVersion: 5,
+      studyPlans: await this.db.select().from(schema.studyPlans).all(),
+      studyPlanItems: await this.db.select().from(schema.studyPlanItems).all(),
       articles: (await this.db.select().from(schema.snapshots).all()).map(
         (r) => r.payload,
       ),
@@ -375,6 +378,10 @@ export class SqliteRepository implements Repository {
     } & AnkiResult
   > {
     await this.ready;
+    if (isPlanAction(action)) {
+      const id = await executePlan(this.db, action, (next) => this.execute(next));
+      return { state: await this.getState(), id };
+    }
     if (action.type === "deleteLearningSession") {
       await deleteLearningSession(this.db, action);
       return { state: await this.getState() };

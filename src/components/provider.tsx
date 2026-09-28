@@ -54,7 +54,11 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           stamp !== generation.current ||
           pendingRef.current ||
           (revision.current &&
-            document.querySelector("textarea, input:focus, select:focus"))
+            // Preserve the revision a dialog was opened against, even after
+            // focus leaves an input for its Save button or the window blurs.
+            document.querySelector(
+              "dialog[open], textarea, input:focus, select:focus",
+            ))
         )
           return;
         revision.current = data.revision || "";

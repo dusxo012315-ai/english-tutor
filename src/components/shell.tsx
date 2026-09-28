@@ -11,25 +11,29 @@ import {
   PanelLeft,
   CircleHelp,
   Headphones,
+  ListOrdered,
 } from "lucide-react";
 import { useStore } from "./provider";
 export function AppShell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const { state, busy, error, clearError, reload } = useStore();
-  const active = path.startsWith("/review")
-    ? "review"
-    : path.startsWith("/listening")
-      ? "listen"
-      : path.startsWith("/learn")
-        ? "read"
-        : path.startsWith("/history")
-          ? "history"
-          : path.startsWith("/cards")
-            ? "cards"
-            : "home";
+  const active = path.startsWith("/plan")
+    ? "plan"
+    : path.startsWith("/review")
+      ? "review"
+      : path.startsWith("/listening")
+        ? "listen"
+        : path.startsWith("/learn")
+          ? "read"
+          : path.startsWith("/history")
+            ? "history"
+            : path.startsWith("/cards")
+              ? "cards"
+              : "home";
   const latest = state?.sessions.find((s) => s.status === "in_progress");
   const navigation = [
     { id: "home", href: "/", label: "학습 홈", Icon: House },
+    { id: "plan", href: "/plan", label: "Study Plan", Icon: ListOrdered },
     {
       id: "read",
       href: latest ? `/learn/${latest.id}` : "/learn",
@@ -42,6 +46,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     { id: "history", href: "/history", label: "학습 기록", Icon: History },
   ];
   if (path === "/login") return <>{children}</>;
+  if (path.startsWith("/print/"))
+    return (
+      <>
+        {error && <p role="alert">{error}</p>}
+        {children}
+      </>
+    );
   return (
     <>
       <a className="skip-link" href="#main">
@@ -102,7 +113,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="topbar-status">
             <span className="save-status" role="status">
               <i className={error ? "error-dot" : ""} />
-              {error ? "저장 상태 확인 필요" : busy ? "저장 중…" : "학습 기록 저장"}
+              {error
+                ? "저장 상태 확인 필요"
+                : busy
+                  ? "저장 중…"
+                  : "학습 기록 저장"}
             </span>
             <span className="badge mock-badge">
               Wikipedia ·{" "}

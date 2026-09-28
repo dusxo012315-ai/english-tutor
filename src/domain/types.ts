@@ -134,7 +134,9 @@ export interface AppState {
   learnedExpressions: import("./learning").LearnedExpression[];
   tutor?: { mode: "mock" | "openai" | "companion"; configured: boolean };
   mode: "mock";
-  schemaVersion: 4;
+  schemaVersion: 5;
+  studyPlans: import("./study-plan").StudyPlan[];
+  studyPlanItems: import("./study-plan").StudyPlanItem[];
   articles: Article[];
   sessions: Session[];
   items: LearningItem[];

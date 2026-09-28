@@ -191,6 +191,9 @@ test("free question, mobile reading, manual card review and Anki TSV regression"
   await page
     .getByLabel("카드 뜻·설명")
     .fill("with는 특징을 나타낸다.\nA bird with blue wings.");
+  // The debounced prompt save temporarily disables the card button. Wait for
+  // persisted state so the button cannot become disabled between pointer events.
+  await expect(page.locator(".tutor-save")).toHaveText("학습 기록에 저장됨");
   await page
     .getByRole("button", { name: "카드 검토하기", exact: true })
     .click();

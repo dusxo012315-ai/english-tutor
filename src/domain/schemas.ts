@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { planActions } from "./study-plan";
 import { ankiActions } from "./anki";
 import { reviewActions } from "./review/review-types";
 import {
@@ -11,6 +12,7 @@ import {
 } from "./learning";
 const id = z.string().min(1).max(100);
 export const actionSchema = z.discriminatedUnion("type", [
+  ...planActions,
   ...ankiActions,
   ...reviewActions,
   z

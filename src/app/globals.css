@@ -1858,9 +1858,12 @@ dialog::backdrop {
     display: flex;
     margin-left: auto;
     gap: 8px;
+    min-width: 0;
+    overflow-x: auto;
   }
   .nav-item {
     margin: 0;
+    flex-shrink: 0;
     min-height: 44px;
     min-width: 44px;
     padding: 10px;
@@ -2212,3 +2215,30 @@ dialog::backdrop {
 .anki-guide a { color:var(--blue,#2950db); }
 .legacy-switch { padding:24px 24px 0; }
 @media(max-width:640px) { .anki-controls { grid-template-columns:1fr; } }
+
+/* Study Plan: wrapping controls retain keyboard/tablet access. */
+.plan-section { margin-block: 20px; scroll-margin-top: 80px; }
+.plan-heading { display: flex; justify-content: space-between; gap: 16px; align-items: center; flex-wrap: wrap; padding-block: 12px; }
+.plan-items { padding-left: 24px; list-style: decimal; }
+.plan-dates, .plan-source { font-size: 12px; color: var(--muted); }
+.plan-items li { padding: 18px 0; border-top: 1px solid #e2e8ef; overflow-wrap: anywhere; }
+.plan-items .button-row { margin-top: 14px; flex-wrap: wrap; }
+.plan-page h2, .plan-page h3 { overflow-wrap: anywhere; }
+.plan-form { display: grid; gap: 16px; }
+.plan-form label { display: grid; gap: 8px; }
+.plan-form input, .plan-form select { width: 100%; min-width: 0; padding: 10px; border: 1px solid #ccd4df; border-radius: 8px; }
+.article-print { max-width: 780px; margin: 24px auto; padding: 24px; color: #18232e; background: white; overflow-wrap: anywhere; }
+.article-print p { font-size: 18px; line-height: 1.8; white-space: pre-wrap; }
+.article-print footer { border-top: 1px solid #bcc5ce; margin-top: 32px; padding-top: 20px; }
+.article-print footer p { font-size: 13px; }
+.print-controls { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+@media print {
+  @page { margin: 18mm; }
+  body { background: white !important; }
+  .print-controls { display: none !important; }
+  .article-print { max-width: none; margin: 0; padding: 0; }
+  .article-print p { font-size: 11pt; line-height: 1.6; }
+  .article-print h1, .article-print h2 { break-after: avoid; }
+  .article-print p { orphans: 3; widows: 3; }
+  .article-print footer p { font-size: 9pt; }
+}

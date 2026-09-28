@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { canPrintArticle } from "@/domain/study-plan";
 import {
   ArrowLeft,
   ArrowUpRight,
@@ -187,6 +188,11 @@ export function ReadingPage({ sessionId }: { sessionId: string }) {
             </div>
             <h1 lang="en">{article.title}</h1>
             <div className="meta-row">
+              {canPrintArticle(article) && (
+                <Link href={`/print/${article.id}`} target="_blank">
+                  Print / Save as PDF
+                </Link>
+              )}
               <span>{article.topic}</span>
               <a href={article.sourceUrl} target="_blank" rel="noreferrer">
                 원문 보기 <ArrowUpRight size={13} />

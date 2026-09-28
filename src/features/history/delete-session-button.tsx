@@ -16,7 +16,7 @@ export function DeleteSessionButton({
   title: string;
   onDeleted: () => void;
 }) {
-  const { run, busy, error, clearError } = useStore();
+  const { state, run, busy, error, clearError } = useStore();
   const [open, setOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const pending = useRef(false);
@@ -66,6 +66,14 @@ export function DeleteSessionButton({
             Anki 화면에서 계속 사용할 수 있습니다.
           </p>
           {error && <p role="alert">{error}</p>}
+          {state?.studyPlanItems.some(
+            (item) => item.sessionId === sessionId,
+          ) && (
+            <p>
+              Study Plan 항목은 남겨 두고 PLANNED로 돌아갑니다. 다시 시작하면 새
+              학습 기록이 만들어집니다.
+            </p>
+          )}
           <div className="button-row">
             <button
               className="button"

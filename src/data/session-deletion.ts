@@ -112,6 +112,11 @@ export async function deleteLearningSession(
           .where(eq(schema.reviewEvents.id, row.id))
           .run();
     }
+    await tx
+      .update(schema.studyPlanItems)
+      .set({ sessionId: null, updatedAt: new Date().toISOString() })
+      .where(eq(schema.studyPlanItems.sessionId, id))
+      .run();
     // Explicit child-before-parent order; every step is in the same transaction.
     await tx
       .delete(schema.companionInteractions)
